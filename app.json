@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/add/add",
     "pages/edit/edit",
-    "pages/stats/stats"
+    "pages/stats/stats",
+    "pages/backup/backup"
   ],
   "window": {
     "navigationBarTextStyle": "black",

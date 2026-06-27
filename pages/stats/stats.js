@@ -72,5 +72,9 @@ Page({
 
   goBack() {
     wx.navigateBack()
+  },
+
+  goToBackup() {
+    wx.navigateTo({ url: '/pages/backup/backup' })
   }
 })

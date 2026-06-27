@@ -64,4 +64,9 @@
     <text class="empty-text">暂无数据</text>
     <text class="empty-hint">添加任务后查看统计数据</text>
   </view>
+
+  <!-- 数据管理入口 -->
+  <view class="backup-entry" bindtap="goToBackup">
+    <text>📦 数据备份与管理</text>
+  </view>
 </view>
