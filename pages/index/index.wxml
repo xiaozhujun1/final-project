@@ -31,7 +31,7 @@
     <view 
       wx:for="{{filteredTodos}}" 
       wx:key="createTime"
-      class="todo-item {{item.completed ? 'completed' : ''}}"
+      class="todo-item {{item.completed ? 'completed' : ''}} {{item.hasDeadline && item.deadline < today && !item.completed ? 'overdue' : ''}}"
       bindtap="onTodoTap"
       bindlongpress="onLongPress"
       data-index="{{index}}"
@@ -42,6 +42,9 @@
         <view class="todo-meta">
           <text class="tag tag-{{item.category}}">{{item.category}}</text>
           <text class="priority priority-{{item.priority}}">{{item.priority}}</text>
+          <text wx:if="{{item.hasDeadline}}" class="deadline {{item.deadline < today && !item.completed ? 'deadline-overdue' : ''}}">
+            {{item.deadline}}
+          </text>
         </view>
       </view>
     </view>

@@ -4,6 +4,8 @@ Page({
     title: '',
     categoryIndex: 0,
     priorityIndex: 1,
+    hasDeadline: false,
+    deadline: '',
     categories: ['工作', '生活', '学习', '其他'],
     priorities: ['高', '中', '低']
   },
@@ -20,8 +22,22 @@ Page({
     this.setData({ priorityIndex: e.detail.value })
   },
 
+  onDeadlineChange(e) {
+    this.setData({ 
+      deadline: e.detail.value,
+      hasDeadline: true
+    })
+  },
+
+  onClearDeadline() {
+    this.setData({
+      hasDeadline: false,
+      deadline: ''
+    })
+  },
+
   onSave() {
-    const { title, categoryIndex, priorityIndex, categories, priorities } = this.data
+    const { title, categoryIndex, priorityIndex, categories, priorities, hasDeadline, deadline } = this.data
     
     if (!title.trim()) {
       wx.showToast({ title: '请输入任务标题', icon: 'none' })
@@ -34,7 +50,9 @@ Page({
       category: categories[categoryIndex],
       priority: priorities[priorityIndex],
       completed: false,
-      createTime: Date.now()
+      createTime: Date.now(),
+      hasDeadline,
+      deadline: hasDeadline ? deadline : ''
     }
 
     todos.unshift(newTodo)

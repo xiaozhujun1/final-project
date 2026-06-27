@@ -5,6 +5,8 @@ Page({
     title: '',
     categoryIndex: 0,
     priorityIndex: 1,
+    hasDeadline: false,
+    deadline: '',
     categories: ['工作', '生活', '学习', '其他'],
     priorities: ['高', '中', '低']
   },
@@ -22,7 +24,9 @@ Page({
         index,
         title: todo.title,
         categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
-        priorityIndex: priorityIndex >= 0 ? priorityIndex : 1
+        priorityIndex: priorityIndex >= 0 ? priorityIndex : 1,
+        hasDeadline: todo.hasDeadline || false,
+        deadline: todo.deadline || ''
       })
     }
   },
@@ -39,8 +43,22 @@ Page({
     this.setData({ priorityIndex: e.detail.value })
   },
 
+  onDeadlineChange(e) {
+    this.setData({ 
+      deadline: e.detail.value,
+      hasDeadline: true
+    })
+  },
+
+  onClearDeadline() {
+    this.setData({
+      hasDeadline: false,
+      deadline: ''
+    })
+  },
+
   onSave() {
-    const { index, title, categoryIndex, priorityIndex, categories, priorities } = this.data
+    const { index, title, categoryIndex, priorityIndex, categories, priorities, hasDeadline, deadline } = this.data
     
     if (!title.trim()) {
       wx.showToast({ title: '请输入任务标题', icon: 'none' })
@@ -53,6 +71,8 @@ Page({
       todos[index].title = title.trim()
       todos[index].category = categories[categoryIndex]
       todos[index].priority = priorities[priorityIndex]
+      todos[index].hasDeadline = hasDeadline
+      todos[index].deadline = hasDeadline ? deadline : ''
 
       wx.setStorageSync('todos', todos)
       wx.showToast({ title: '保存成功', icon: 'success' })

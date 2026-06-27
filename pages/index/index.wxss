@@ -129,6 +129,23 @@
 .priority-mid { background: #fff7e6; color: #faad14; }
 .priority-low { background: #f6ffed; color: #52c41a; }
 
+.deadline {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+  background: #f5f5f5;
+  color: #666;
+}
+
+.deadline-overdue {
+  background: #fff1f0;
+  color: #ff4d4f;
+}
+
+.todo-item.overdue {
+  border-left: 6rpx solid #ff4d4f;
+}
+
 .empty {
   display: flex;
   flex-direction: column;

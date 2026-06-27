@@ -37,5 +37,21 @@
     </picker>
   </view>
 
+  <view class="form-item">
+    <view class="label">截止日期</view>
+    <view class="deadline-row">
+      <picker 
+        mode="date"
+        value="{{deadline}}"
+        bindchange="onDeadlineChange"
+      >
+        <view class="picker {{hasDeadline ? '' : 'placeholder'}}">
+          {{hasDeadline ? deadline : '选择日期'}}
+        </view>
+      </picker>
+      <view wx:if="{{hasDeadline}}" class="clear-btn" bindtap="onClearDeadline">清除</view>
+    </view>
+  </view>
+
   <view class="btn-save" bindtap="onSave">保存</view>
 </view>

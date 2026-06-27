@@ -6,8 +6,9 @@ Page({
     completedCount: 0,
     filterIndex: 0,
     sortIndex: 0,
+    today: new Date().toISOString().split('T')[0],
     categories: ['全部', '待完成', '已完成'],
-    sortOptions: ['按创建时间', '按优先级'],
+    sortOptions: ['按创建时间', '按优先级', '按截止日期'],
     currentTodoIndex: -1
   },
 
@@ -42,12 +43,26 @@ Page({
     // 排序
     if (sortIndex === 0) {
       filtered.sort((a, b) => b.createTime - a.createTime)
-    } else {
+    } else if (sortIndex === 1) {
       const priorityMap = { '高': 0, '中': 1, '低': 2 }
       filtered.sort((a, b) => priorityMap[a.priority] - priorityMap[b.priority])
+    } else {
+      // 按截止日期排序，有截止日期的排前面
+      filtered.sort((a, b) => {
+        if (!a.deadline && !b.deadline) return 0
+        if (!a.deadline) return 1
+        if (!b.deadline) return -1
+        return a.deadline.localeCompare(b.deadline)
+      })
     }
     
     return filtered
+  },
+
+  isOverdue(todo) {
+    if (!todo.hasDeadline || !todo.deadline || todo.completed) return false
+    const today = new Date().toISOString().split('T')[0]
+    return todo.deadline < today
   },
 
   onFilterTap(e) {

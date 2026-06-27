@@ -26,6 +26,22 @@
   color: #333;
 }
 
+.picker.placeholder {
+  color: #999;
+}
+
+.deadline-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.clear-btn {
+  font-size: 26rpx;
+  color: #ff4d4f;
+  padding: 8rpx 16rpx;
+}
+
 .btn-save {
   background: #1890ff;
   color: #fff;
