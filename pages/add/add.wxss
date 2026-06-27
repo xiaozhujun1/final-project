@@ -19,11 +19,14 @@
 .input {
   font-size: 30rpx;
   color: #333;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .picker {
   font-size: 30rpx;
   color: #333;
+  width: 100%;
 }
 
 .picker.placeholder {
@@ -33,7 +36,11 @@
 .deadline-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.deadline-row .picker {
+  flex: 1;
 }
 
 .clear-btn {
@@ -54,8 +61,10 @@
   background: #1890ff;
   color: #fff;
   text-align: center;
-  padding: 24rpx 0;
+  padding: 28rpx 0;
   border-radius: 12rpx;
   font-size: 32rpx;
   margin-top: 40rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
