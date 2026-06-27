@@ -1,11 +1,12 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/add/add",
+    "pages/edit/edit"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "待办清单",
     "navigationBarBackgroundColor": "#ffffff"
   },
   "style": "v2",

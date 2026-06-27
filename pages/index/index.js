@@ -1,49 +1,128 @@
-// index.js
-const defaultAvatarUrl = 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'
-
+// pages/index/index.js
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {
-      avatarUrl: defaultAvatarUrl,
-      nickName: '',
-    },
-    hasUserInfo: false,
-    canIUseGetUserProfile: wx.canIUse('getUserProfile'),
-    canIUseNicknameComp: wx.canIUse('input.type.nickname'),
+    todos: [],
+    filteredTodos: [],
+    completedCount: 0,
+    filterIndex: 0,
+    sortIndex: 0,
+    categories: ['全部', '待完成', '已完成'],
+    sortOptions: ['按创建时间', '按优先级'],
+    currentTodoIndex: -1
   },
-  bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
+
+  onLoad() {
+    this.loadTodos()
   },
-  onChooseAvatar(e) {
-    const { avatarUrl } = e.detail
-    const { nickName } = this.data.userInfo
-    this.setData({
-      "userInfo.avatarUrl": avatarUrl,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
+
+  onShow() {
+    this.loadTodos()
   },
-  onInputChange(e) {
-    const nickName = e.detail.value
-    const { avatarUrl } = this.data.userInfo
-    this.setData({
-      "userInfo.nickName": nickName,
-      hasUserInfo: nickName && avatarUrl && avatarUrl !== defaultAvatarUrl,
-    })
+
+  onPullDownRefresh() {
+    this.loadTodos()
+    wx.stopPullDownRefresh()
   },
-  getUserProfile(e) {
-    // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
-    wx.getUserProfile({
-      desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+
+  loadTodos() {
+    const todos = wx.getStorageSync('todos') || []
+    const completedCount = todos.filter(t => t.completed).length
+    const filteredTodos = this.getFilteredTodos(todos)
+    this.setData({ todos, completedCount, filteredTodos })
+  },
+
+  getFilteredTodos(todos) {
+    let filtered
+    const { filterIndex, sortIndex } = this.data
+    
+    if (filterIndex === 0) filtered = [...todos]
+    else if (filterIndex === 1) filtered = todos.filter(t => !t.completed)
+    else filtered = todos.filter(t => t.completed)
+
+    // 排序
+    if (sortIndex === 0) {
+      filtered.sort((a, b) => b.createTime - a.createTime)
+    } else {
+      const priorityMap = { '高': 0, '中': 1, '低': 2 }
+      filtered.sort((a, b) => priorityMap[a.priority] - priorityMap[b.priority])
+    }
+    
+    return filtered
+  },
+
+  onFilterTap(e) {
+    const index = e.currentTarget.dataset.index
+    this.setData({ filterIndex: index })
+    this.loadTodos()
+  },
+
+  onSortChange(e) {
+    const index = e.detail.value
+    this.setData({ sortIndex: index })
+    this.loadTodos()
+  },
+
+  onTodoTap(e) {
+    const index = e.currentTarget.dataset.index
+    const todos = this.data.todos
+    const todo = this.data.filteredTodos[index]
+    const realIndex = todos.findIndex(t => t.createTime === todo.createTime)
+    
+    todos[realIndex].completed = !todos[realIndex].completed
+    wx.setStorageSync('todos', todos)
+    this.loadTodos()
+  },
+
+  onLongPress(e) {
+    const index = e.currentTarget.dataset.index
+    const todo = this.data.filteredTodos[index]
+    const todos = this.data.todos
+    const realIndex = todos.findIndex(t => t.createTime === todo.createTime)
+    
+    this.setData({ currentTodoIndex: realIndex })
+    
+    wx.showActionSheet({
+      itemList: [todo.completed ? '标记未完成' : '标记完成', '编辑', '删除'],
       success: (res) => {
-        console.log(res)
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
+        if (res.tapIndex === 0) {
+          this.toggleComplete(realIndex)
+        } else if (res.tapIndex === 1) {
+          this.onEditTap({ currentTarget: { dataset: { index: realIndex } } })
+        } else if (res.tapIndex === 2) {
+          this.deleteTodo(realIndex)
+        }
       }
     })
   },
+
+  toggleComplete(index) {
+    const todos = this.data.todos
+    todos[index].completed = !todos[index].completed
+    wx.setStorageSync('todos', todos)
+    this.loadTodos()
+  },
+
+  deleteTodo(index) {
+    wx.showModal({
+      title: '确认删除',
+      content: '确定要删除这个任务吗？',
+      success: (res) => {
+        if (res.confirm) {
+          const todos = this.data.todos
+          todos.splice(index, 1)
+          wx.setStorageSync('todos', todos)
+          this.loadTodos()
+        }
+      }
+    })
+  },
+
+  onAddTap() {
+    wx.navigateTo({ url: '/pages/add/add' })
+  },
+
+  onEditTap(e) {
+    const index = e.currentTarget.dataset.index
+    wx.navigateTo({ url: `/pages/edit/edit?index=${index}` })
+  }
 })

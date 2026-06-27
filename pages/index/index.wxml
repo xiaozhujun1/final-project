@@ -1,27 +1,58 @@
-<!--index.wxml-->
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+<view class="container">
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view 
+      wx:for="{{categories}}" 
+      wx:key="index"
+      class="filter-item {{filterIndex === index ? 'active' : ''}}"
+      bindtap="onFilterTap"
+      data-index="{{index}}"
+    >
+      {{item}}
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+    <picker 
+      class="sort-picker"
+      mode="selector"
+      range="{{sortOptions}}"
+      value="{{sortIndex}}"
+      bindchange="onSortChange"
+    >
+      <view class="sort-btn">排序：{{sortOptions[sortIndex]}}</view>
+    </picker>
+  </view>
+
+  <!-- 统计 -->
+  <view class="stats">
+    <text>已完成 {{completedCount}} / {{todos.length}}</text>
+  </view>
+
+  <!-- 任务列表 -->
+  <view class="todo-list">
+    <view 
+      wx:for="{{filteredTodos}}" 
+      wx:key="createTime"
+      class="todo-item {{item.completed ? 'completed' : ''}}"
+      bindtap="onTodoTap"
+      bindlongpress="onLongPress"
+      data-index="{{index}}"
+    >
+      <view class="check-circle {{item.completed ? 'checked' : ''}}"></view>
+      <view class="todo-content">
+        <view class="todo-title">{{item.title}}</view>
+        <view class="todo-meta">
+          <text class="tag tag-{{item.category}}">{{item.category}}</text>
+          <text class="priority priority-{{item.priority}}">{{item.priority}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{filteredTodos.length === 0}}" class="empty">
+      <view class="empty-icon">📝</view>
+      <text class="empty-text">暂无待办事项</text>
+      <text class="empty-hint">点击右下角 + 添加新任务</text>
     </view>
   </view>
-</scroll-view>
+
+  <!-- 添加按钮 -->
+  <view class="add-btn" bindtap="onAddTap">+</view>
+</view>
