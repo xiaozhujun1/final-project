@@ -22,8 +22,9 @@
   </view>
 
   <!-- 统计 -->
-  <view class="stats">
+  <view class="stats" bindtap="goToStats">
     <text>已完成 {{completedCount}} / {{todos.length}}</text>
+    <text class="stats-arrow">查看详情</text>
   </view>
 
   <!-- 任务列表 -->

@@ -139,5 +139,9 @@ Page({
   onEditTap(e) {
     const index = e.currentTarget.dataset.index
     wx.navigateTo({ url: `/pages/edit/edit?index=${index}` })
+  },
+
+  goToStats() {
+    wx.navigateTo({ url: '/pages/stats/stats' })
   }
 })

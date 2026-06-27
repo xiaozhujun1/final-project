@@ -1,0 +1,67 @@
+<view class="container">
+  <!-- 总体概览 -->
+  <view class="overview">
+    <view class="overview-item">
+      <view class="overview-value">{{total}}</view>
+      <view class="overview-label">总任务</view>
+    </view>
+    <view class="overview-item">
+      <view class="overview-value completed">{{completed}}</view>
+      <view class="overview-label">已完成</view>
+    </view>
+    <view class="overview-item">
+      <view class="overview-value pending">{{pending}}</view>
+      <view class="overview-label">待完成</view>
+    </view>
+  </view>
+
+  <!-- 完成率 -->
+  <view class="rate-card">
+    <view class="rate-header">
+      <text class="rate-title">总体完成率</text>
+      <text class="rate-value">{{completionRate}}%</text>
+    </view>
+    <view class="rate-bar">
+      <view class="rate-progress" style="width: {{completionRate}}%"></view>
+    </view>
+  </view>
+
+  <!-- 分类统计 -->
+  <view class="section" wx:if="{{categoryStats.length > 0}}">
+    <view class="section-title">分类统计</view>
+    <view class="category-list">
+      <view class="category-item" wx:for="{{categoryStats}}" wx:key="name">
+        <view class="category-header">
+          <text class="category-name">{{item.name}}</text>
+          <text class="category-count">{{item.completed}}/{{item.total}}</text>
+        </view>
+        <view class="category-bar">
+          <view class="category-progress" style="width: {{item.rate}}%"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 优先级统计 -->
+  <view class="section" wx:if="{{priorityStats.length > 0}}">
+    <view class="section-title">优先级分布</view>
+    <view class="priority-list">
+      <view class="priority-item" wx:for="{{priorityStats}}" wx:key="name">
+        <view class="priority-tag priority-{{item.nameKey}}">{{item.name}}</view>
+        <view class="priority-bar-wrap">
+          <view class="priority-bar">
+            <view class="priority-progress" style="width: {{item.total / total * 100}}%"></view>
+          </view>
+        </view>
+        <text class="priority-count">{{item.total}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{total === 0}}" class="empty">
+    <view class="empty-icon">📊</view>
+    <text class="empty-text">暂无数据</text>
+    <text class="empty-hint">添加任务后查看统计数据</text>
+  </view>
+</view>
