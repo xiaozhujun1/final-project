@@ -42,6 +42,14 @@
   padding: 8rpx 16rpx;
 }
 
+.remark-input {
+  font-size: 28rpx;
+  color: #333;
+  min-height: 120rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .btn-save {
   background: #1890ff;
   color: #fff;

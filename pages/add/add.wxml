@@ -53,5 +53,16 @@
     </view>
   </view>
 
+  <view class="form-item">
+    <view class="label">备注</view>
+    <textarea 
+      class="remark-input" 
+      placeholder="添加备注信息（可选）" 
+      value="{{remark}}"
+      bindinput="onRemarkInput"
+      maxlength="200"
+    />
+  </view>
+
   <view class="btn-save" bindtap="onSave">保存</view>
 </view>

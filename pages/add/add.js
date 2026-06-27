@@ -6,6 +6,7 @@ Page({
     priorityIndex: 1,
     hasDeadline: false,
     deadline: '',
+    remark: '',
     categories: ['工作', '生活', '学习', '其他'],
     priorities: ['高', '中', '低']
   },
@@ -36,8 +37,12 @@ Page({
     })
   },
 
+  onRemarkInput(e) {
+    this.setData({ remark: e.detail.value })
+  },
+
   onSave() {
-    const { title, categoryIndex, priorityIndex, categories, priorities, hasDeadline, deadline } = this.data
+    const { title, categoryIndex, priorityIndex, categories, priorities, hasDeadline, deadline, remark } = this.data
     
     if (!title.trim()) {
       wx.showToast({ title: '请输入任务标题', icon: 'none' })
@@ -52,7 +57,8 @@ Page({
       completed: false,
       createTime: Date.now(),
       hasDeadline,
-      deadline: hasDeadline ? deadline : ''
+      deadline: hasDeadline ? deadline : '',
+      remark: remark.trim()
     }
 
     todos.unshift(newTodo)

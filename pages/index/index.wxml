@@ -47,6 +47,9 @@
             {{item.deadline}}
           </text>
         </view>
+        <view wx:if="{{item.remark}}" class="remark">
+          {{item.remark.length > 30 ? item.remark.substring(0, 30) + '...' : item.remark}}
+        </view>
       </view>
     </view>
 
