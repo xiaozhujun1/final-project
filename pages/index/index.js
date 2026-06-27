@@ -9,7 +9,9 @@ Page({
     today: new Date().toISOString().split('T')[0],
     categories: ['全部', '待完成', '已完成'],
     sortOptions: ['按创建时间', '按优先级', '按截止日期'],
-    currentTodoIndex: -1
+    currentTodoIndex: -1,
+    searchKey: '',
+    isSearching: false
   },
 
   onLoad() {
@@ -34,11 +36,20 @@ Page({
 
   getFilteredTodos(todos) {
     let filtered
-    const { filterIndex, sortIndex } = this.data
+    const { filterIndex, sortIndex, searchKey } = this.data
     
+    // 筛选
     if (filterIndex === 0) filtered = [...todos]
     else if (filterIndex === 1) filtered = todos.filter(t => !t.completed)
     else filtered = todos.filter(t => t.completed)
+
+    // 搜索
+    if (searchKey) {
+      filtered = filtered.filter(t => 
+        t.title.toLowerCase().includes(searchKey.toLowerCase()) ||
+        t.remark.toLowerCase().includes(searchKey.toLowerCase())
+      )
+    }
 
     // 排序
     if (sortIndex === 0) {
@@ -47,7 +58,6 @@ Page({
       const priorityMap = { '高': 0, '中': 1, '低': 2 }
       filtered.sort((a, b) => priorityMap[a.priority] - priorityMap[b.priority])
     } else {
-      // 按截止日期排序，有截止日期的排前面
       filtered.sort((a, b) => {
         if (!a.deadline && !b.deadline) return 0
         if (!a.deadline) return 1
@@ -59,10 +69,15 @@ Page({
     return filtered
   },
 
-  isOverdue(todo) {
-    if (!todo.hasDeadline || !todo.deadline || todo.completed) return false
-    const today = new Date().toISOString().split('T')[0]
-    return todo.deadline < today
+  onSearchInput(e) {
+    const searchKey = e.detail.value
+    this.setData({ searchKey, isSearching: searchKey.length > 0 })
+    this.loadTodos()
+  },
+
+  onSearchClear() {
+    this.setData({ searchKey: '', isSearching: false })
+    this.loadTodos()
   },
 
   onFilterTap(e) {

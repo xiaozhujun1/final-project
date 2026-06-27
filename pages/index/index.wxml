@@ -1,4 +1,15 @@
 <view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <input 
+      class="search-input" 
+      placeholder="搜索任务标题或备注" 
+      value="{{searchKey}}"
+      bindinput="onSearchInput"
+    />
+    <view wx:if="{{isSearching}}" class="search-clear" bindtap="onSearchClear">清除</view>
+  </view>
+
   <!-- 筛选栏 -->
   <view class="filter-bar">
     <view 
@@ -27,6 +38,11 @@
     <text class="stats-arrow">查看详情</text>
   </view>
 
+  <!-- 搜索结果提示 -->
+  <view wx:if="{{isSearching}}" class="search-tip">
+    <text>搜索到 {{filteredTodos.length}} 个结果</text>
+  </view>
+
   <!-- 任务列表 -->
   <view class="todo-list">
     <view 
@@ -53,10 +69,16 @@
       </view>
     </view>
 
-    <view wx:if="{{filteredTodos.length === 0}}" class="empty">
+    <view wx:if="{{filteredTodos.length === 0 && !isSearching}}" class="empty">
       <view class="empty-icon">📝</view>
       <text class="empty-text">暂无待办事项</text>
       <text class="empty-hint">点击右下角 + 添加新任务</text>
+    </view>
+
+    <view wx:if="{{filteredTodos.length === 0 && isSearching}}" class="empty">
+      <view class="empty-icon">🔍</view>
+      <text class="empty-text">未找到相关任务</text>
+      <text class="empty-hint">尝试其他关键词</text>
     </view>
   </view>
 
